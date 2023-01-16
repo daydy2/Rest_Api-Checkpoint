@@ -8,14 +8,14 @@ const userController = require('./controller/users');
 
 
 const app = express();
-const router = express.Router();
 
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
-router.get('/', userController.getAllUsers);
-router.post('/add-user', userController.postNewUser);
-router.put('/update-user', userController.editAUser);
-router.delete('/delete', userController.deleteUser);
+app.get('/', userController.getHome);
+app.get('/users', userController.getAllUsers);
+app.post('/add-user', userController.postNewUser);
+app.put('/update-user/:userId', userController.editAUser);
+app.delete('/delete/:userId', userController.deleteUser);
 
 mongoose.set('strictQuery', true);
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true },() => {

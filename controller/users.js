@@ -1,5 +1,10 @@
 const User = require("../models/User");
 
+//Home
+exports.getHome = (req, res, next) => {
+  res.status(200).send("Welcome to REST-API Checkpoint page");
+};
+
 //GET :  RETURN ALL USERS
 exports.getAllUsers = (req, res, next) => {
   User.find()
@@ -24,7 +29,8 @@ exports.postNewUser = (req, res, next) => {
     email: email,
     hobbies: hobbies,
   });
-  newUser.save()
+  newUser
+    .save()
     .then((result) => {
       res.status(202).json(result);
     })
@@ -33,15 +39,14 @@ exports.postNewUser = (req, res, next) => {
     });
 };
 
-//PUT : EDIT A USER BY ID 
+//PUT : EDIT A USER BY ID
 exports.editAUser = (req, res, next) => {
-  const userId = req.body.userId;
-  const field = req.body.field;
+  const userId = req.params.userId;
   const updateInfo = req.body.updateInfo;
 
   User.findOneAndUpdate(
     { _id: userId },
-    { field: { $all: updateInfo } },
+    { $set: { firstName: updateInfo } },
     { new: true }
   )
     .then((result) => {
@@ -54,8 +59,8 @@ exports.editAUser = (req, res, next) => {
 
 //DELETE : REMOVE A USER BY ID
 exports.deleteUser = (req, res, next) => {
-  const userId = req.params.userdId;
-  User.deleteOne({ _id: userId })
+  const userId = req.params.userId;
+  User.findByIdAndDelete({ _id: userId })
     .then((result) => {
       res.status(200).json(result);
     })
